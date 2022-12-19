@@ -6,12 +6,9 @@ import CardMenu from "../components/CardMenu";
 import ModalMenu from "../components/ModalMenu";
 function Menu() {
   const { menuNames } = useParams();
-
-  //   console.log(menuNames);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
-  //   console.log(process.env.REACT_APP_API_KEY);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [id, setId] = useState(648279);
   const [dataSatuan, setDataSatuan] = useState([]);
@@ -30,8 +27,6 @@ function Menu() {
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY}&cuisine=${menuName}`
       );
       const resp = await req.json();
-      // console.log(resp);
-
       const foods = resp.results.map(async (el) => {
         const url = `https://api.spoonacular.com/recipes/${el.id}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`;
         const req = await fetch(url);
@@ -40,7 +35,6 @@ function Menu() {
       });
       const temp = await Promise.all(foods);
       localStorage.setItem(menuName, JSON.stringify(temp));
-      // console.log(temp);
       setData(temp);
       setLoading(false);
     }
@@ -52,10 +46,8 @@ function Menu() {
 
   const getFoodItem = async (idMenu) => {
     const chek = localStorage.getItem(`${menuNames}Detail${idMenu}`);
-    // console.log(JSON.parse(chek))
     if (chek) {
       setDataSatuan(JSON.parse(chek));
-      //   setIngredients(data.extendedIngredients);
       setLoading2(false);
     } else {
       const url = `https://api.spoonacular.com/recipes/${idMenu}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`;
@@ -63,7 +55,6 @@ function Menu() {
       const resp = await req.json();
       localStorage.setItem(`${menuNames}Detail${idMenu}`, JSON.stringify(resp));
       setDataSatuan(resp);
-      //   setIngredients(resp.extendedIngredients);
       setLoading2(false);
     }
   };

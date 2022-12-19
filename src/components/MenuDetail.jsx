@@ -8,9 +8,7 @@ import LoadingSpiner from "../components/LoadingSpiner";
 
 function MenuDetail() {
   const { id } = useParams();
-
   const [data, setData] = useState([]);
-  //   const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,10 +17,8 @@ function MenuDetail() {
 
   const getFoodItem = async (idMenu) => {
     const chek = localStorage.getItem(`menuDetail${idMenu}`);
-    // console.log(JSON.parse(chek));
     if (chek) {
       setData(JSON.parse(chek));
-      //   setIngredients(data.extendedIngredients);
       setLoading(false);
     } else {
       const url = `https://api.spoonacular.com/recipes/${idMenu}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`;
@@ -30,12 +26,10 @@ function MenuDetail() {
       const resp = await req.json();
       localStorage.setItem(`menuDetail${idMenu}`, JSON.stringify(resp));
       setData(resp);
-      //   setIngredients(resp.extendedIngredients);
       setLoading(false);
     }
   };
 
-  // console.log({ data });
   function Summary() {
     let kalimat = data.summary;
     const temp = parse(kalimat);
@@ -66,7 +60,6 @@ function MenuDetail() {
                 return el.name + ", ";
               })}
             </Box>
-            {/* <Summary /> */}
           </Box>
           <Box textAlign="center">
             <Text fontWeight="bold" fontSize="xl">

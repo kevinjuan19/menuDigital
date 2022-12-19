@@ -7,16 +7,15 @@ import {
   Text,
   Heading,
   useDisclosure,
-  ModalOverlay,
   Badge,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpiner from "../components/LoadingSpiner";
 import ModalMenu from "../components/ModalMenu";
 import MainCourse from "../components/MainCourse";
 import Drink from "../components/Drink";
 import Dessert from "../components/Dessert";
+import Overlay from "../components/Overlay";
 
 function Home() {
   const [recomended, setRecomended] = useState([]);
@@ -25,6 +24,8 @@ function Home() {
   const [loading2, setLoading2] = useState(true);
   const [dataSatuan, setDataSatuan] = useState([]);
   const [id, setId] = useState(648279);
+  const [overlay, setOverlay] = useState(<Overlay />);
+
   useEffect(() => {
     getRecomended();
   }, []);
@@ -49,27 +50,16 @@ function Home() {
     getRecomendedItem(id);
   }, [id]);
 
-  const Overlay = () => (
-    <ModalOverlay
-      bg="blackAlpha.300"
-      backdropFilter="blur(10px) hue-rotate(90deg)"
-    />
-  );
-  const [overlay, setOverlay] = useState(<Overlay />);
-
   const handleclik = (idMenu) => {
     setId(idMenu);
     setOverlay(<Overlay />);
-    // console.log(dataSatuan.cuisines[0]);
     onOpen();
   };
 
   const getRecomendedItem = async (idMenu) => {
     const chek = localStorage.getItem(`recomendedDetail${idMenu}`);
-    // console.log(JSON.parse(chek))
     if (chek) {
       setDataSatuan(JSON.parse(chek));
-      //   setIngredients(data.extendedIngredients);
       setLoading2(false);
     } else {
       const url = `https://api.spoonacular.com/recipes/${idMenu}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`;
@@ -77,7 +67,6 @@ function Home() {
       const resp = await req.json();
       localStorage.setItem(`recomendedDetail${idMenu}`, JSON.stringify(resp));
       setDataSatuan(resp);
-      //   setIngredients(resp.extendedIngredients);
       setLoading2(false);
     }
   };

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { SimpleGrid, useDisclosure, ModalOverlay } from "@chakra-ui/react";
+import { SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import LoadingSpiner from "../components/LoadingSpiner";
 import CardMenu from "../components/CardMenu";
 import ModalMenu from "../components/ModalMenu";
+import Overlay from "../components/Overlay";
 
 function SearchPage() {
   let { query } = useParams();
@@ -13,6 +14,7 @@ function SearchPage() {
   const [id, setId] = useState(648279);
   const [dataSatuan, setDataSatuan] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overlay, setOverlay] = useState(<Overlay />);
 
   useEffect(() => {
     getFoods(query);
@@ -29,8 +31,6 @@ function SearchPage() {
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${process.env.REACT_APP_API_KEY}&query=${name}`
       );
       const resp = await req.json();
-      // console.log(resp);
-
       const searchQuery = resp.results.map(async (el) => {
         const url = `https://api.spoonacular.com/recipes/${el.id}/information?includeNutrition=false&apiKey=${process.env.REACT_APP_API_KEY}`;
         const req = await fetch(url);
@@ -39,7 +39,6 @@ function SearchPage() {
       });
       const temp = await Promise.all(searchQuery);
       localStorage.setItem(name, JSON.stringify(temp));
-      console.log(temp);
       setData(temp);
       setLoading(false);
     }
@@ -63,13 +62,7 @@ function SearchPage() {
       setLoading2(false);
     }
   };
-  const Overlay = () => (
-    <ModalOverlay
-      bg="blackAlpha.300"
-      backdropFilter="blur(10px) hue-rotate(90deg)"
-    />
-  );
-  const [overlay, setOverlay] = useState(<Overlay />);
+
   const handleclik = (idMenu) => {
     setId(idMenu);
     setOverlay(<Overlay />);

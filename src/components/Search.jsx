@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { Input, HStack } from "@chakra-ui/react";
 import {
+  Input,
+  HStack,
   Modal,
-  ModalOverlay,
   ModalContent,
   ModalBody,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import Overlay from "./Overlay";
 
 function Search() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const Overlay = () => (
-    <ModalOverlay
-      bg="blackAlpha.300"
-      backdropFilter="blur(10px) hue-rotate(90deg)"
-    />
-  );
   const [overlay] = useState(<Overlay />);
   const [searchValue, setSerachValue] = useState("");
   const navigate = useNavigate();
